@@ -4,11 +4,12 @@ import request from 'superagent'
 
 class People extends React.Component {
     state = {
-        people:[]
+        people: [],
+        moreButton: false
     }
 
-    componentDidUpdate(prevProps){
-        if (this.props.data.people != prevProps.data.people){
+    componentDidUpdate(prevProps) {
+        if (this.props.data.people != prevProps.data.people) {
             this.mapPeople()
         }
     }
@@ -17,13 +18,26 @@ class People extends React.Component {
         this.props.data.people.map(this.loadPeople)
     }
 
-    loadPeople=(link)=>{
+    loadPeople = (link) => {
         request.get(link)
-        .then(res => {
-            this.setState({
-                people: [...this.state.people, res.body]
+            .then(res => {
+                this.setState({
+                    people: [...this.state.people, res.body]
+                })
             })
-        })
+    }
+
+    handleClick = (e) => {
+        e.preventDefault()
+        if (this.state.moreButton == false) {
+            this.setState({
+                moreButton: true
+            })
+        } else if (this.state.moreButton == true) {
+            this.setState({
+                moreButton: false
+            })
+        }
     }
 
     render() {
@@ -31,21 +45,23 @@ class People extends React.Component {
         return (
             <section>
                 <h3>Characters</h3>
+                <button
+                    onClick={this.handleClick}>More Detail</button>
                 <ul>
                     {people.map(person => {
                         return <article key={person.id}>
                             <p>{person.name}</p>
+
+                            {this.state.moreButton && <ul>
+                                <li>Gender: {person.gender}</li>
+                                <li>Age: {person.age}</li>
+                                <li>Eye color: {person.eye_color}</li>
+                                <li>Hair color: {person.hair_color}</li>
+                            </ul>}
                         </article>
                     })}
                 </ul>
-                
-                {/* {this.props.data.people ? this.props.data.people.map((person, i) => {
-                    return <article key={i}>
-                        <p>{person}</p>
-                    </article>
-                }) : <p>Loading....</p>} */}
 
-                {/* {(data.people && this.state.people.length < 1) && data.people.map(this.loadPeople)} */}
             </section>
         )
     }

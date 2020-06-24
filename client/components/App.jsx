@@ -14,10 +14,6 @@ class App extends React.Component {
     this.loadStart()
   }
 
-  // handleClick = () => {
-  //   this.loadStart()
-  // }
-
   loadStart = () => {
     request.get(URL)
       .then(res => {
@@ -41,7 +37,6 @@ class App extends React.Component {
           <People data={this.state.movie}/>
         </article>
 
-        {/* <button onClick={this.handleClick}>Click Me</button> */}
       </section>
     )
   }
